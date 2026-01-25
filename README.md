@@ -7,6 +7,12 @@ Aplicativo Flutter para gerenciamento de clientes e seus respectivos tipos, dese
 
 ![Thumbnail GitHub](./thumb.png)
 
+## 📸 Screenshot do App
+
+<p align="center">
+  <img src="./screenshot.png" alt="Screenshot do Client Control" width="300">
+</p>
+
 ---
 
 ## 📋 Sobre o Projeto
