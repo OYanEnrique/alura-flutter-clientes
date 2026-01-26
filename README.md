@@ -35,21 +35,22 @@ O **Client Control** é uma aplicação mobile desenvolvida em Flutter que permi
 
 ```
 lib/
-├── main.dart                      # Ponto de entrada da aplicação
+├── main.dart                      # Ponto de entrada da aplicação com Provider
 ├── components/
 │   ├── hamburger_menu.dart        # Menu lateral de navegação
 │   └── icon_picker.dart           # Componente de seleção de ícones
 ├── models/
 │   ├── client.dart                # Model de Cliente
+│   ├── clients.dart               # Gerenciador de estado dos Clientes com ChangeNotifier
 │   └── client_type.dart           # Model de Tipo de Cliente
 ├── pages/
 │   ├── clients_page.dart          # Tela de gerenciamento de clientes
 │   └── client_types_page.dart     # Tela de gerenciamento de tipos
 └── state/
-    └── types_state.dart           # Gerenciamento de estado
+    └── types_state.dart           # Gerenciamento de estado dos tipos
 ```
 
-### 📦 Models
+### 📦 Models e Gerenciamento de Estado
 
 #### Client (Cliente)
 ```dart
@@ -58,10 +59,50 @@ lib/
 - type: ClientType      // Tipo/categoria do cliente
 ```
 
+#### Clients (Gerenciador de Clientes) - ChangeNotifier
+```dart
+- clients: List<Client>  // Lista de clientes
+- extends ChangeNotifier // Notifica listeners sobre mudanças
+```
+
 #### ClientType (Tipo de Cliente)
 ```dart
 - name: String          // Nome do tipo
 - icon: IconData?       // Ícone representativo
+```
+
+---
+
+## 🔄 Gerenciamento de Estado com Provider
+
+Este projeto utiliza o **Provider** como solução de gerenciamento de estado, implementando o padrão **ChangeNotifier** para notificar as telas sobre mudanças nos dados.
+
+### Configuração do Provider
+
+O Provider é configurado no ponto de entrada da aplicação ([main.dart](lib/main.dart)):
+
+```dart
+void main() {
+  runApp(ChangeNotifierProvider(
+      create: (context) => Clients(clients: []),
+      child: const MyApp(),
+    ),
+  );
+}
+```
+
+### Benefícios do Provider
+
+- ✅ **Reatividade**: As telas são atualizadas automaticamente quando os dados mudam
+- ✅ **Separação de Responsabilidades**: Lógica de negócio separada da UI
+- ✅ **Performance**: Apenas widgets que dependem do estado são reconstruídos
+- ✅ **Facilidade de Manutenção**: Código mais organizado e testável
+
+### Dependências
+
+```yaml
+dependencies:
+  provider: ^6.0.3
 ```
 
 ---
