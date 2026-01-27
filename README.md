@@ -35,19 +35,18 @@ O **Client Control** é uma aplicação mobile desenvolvida em Flutter que permi
 
 ```
 lib/
-├── main.dart                      # Ponto de entrada da aplicação com Provider
+├── main.dart                      # Ponto de entrada da aplicação com MultiProvider
 ├── components/
 │   ├── hamburger_menu.dart        # Menu lateral de navegação
 │   └── icon_picker.dart           # Componente de seleção de ícones
 ├── models/
 │   ├── client.dart                # Model de Cliente
 │   ├── clients.dart               # Gerenciador de estado dos Clientes com ChangeNotifier
-│   └── client_type.dart           # Model de Tipo de Cliente
-├── pages/
-│   ├── clients_page.dart          # Tela de gerenciamento de clientes
-│   └── client_types_page.dart     # Tela de gerenciamento de tipos
-└── state/
-    └── types_state.dart           # Gerenciamento de estado dos tipos
+│   ├── client_type.dart           # Model de Tipo de Cliente
+│   └── types.dart                 # Gerenciador de estado dos Tipos com ChangeNotifier
+└── pages/
+    ├── clients_page.dart          # Tela de gerenciamento de clientes
+    └── client_types_page.dart     # Tela de gerenciamento de tipos
 ```
 
 ### 📦 Models e Gerenciamento de Estado
@@ -62,6 +61,7 @@ lib/
 #### Clients (Gerenciador de Clientes) - ChangeNotifier
 ```dart
 - clients: List<Client>  // Lista de clientes
+- add(Client): void      // Adiciona um cliente e notifica listeners
 - extends ChangeNotifier // Notifica listeners sobre mudanças
 ```
 
@@ -69,6 +69,13 @@ lib/
 ```dart
 - name: String          // Nome do tipo
 - icon: IconData?       // Ícone representativo
+```
+
+#### Types (Gerenciador de Tipos) - ChangeNotifier
+```dart
+- types: List<ClientType>  // Lista de tipos de clientes
+- add(ClientType): void    // Adiciona um tipo e notifica listeners
+- extends ChangeNotifier   // Notifica listeners sobre mudanças
 ```
 
 ---
@@ -79,16 +86,44 @@ Este projeto utiliza o **Provider** como solução de gerenciamento de estado, i
 
 ### Configuração do Provider
 
-O Provider é configurado no ponto de entrada da aplicação ([main.dart](lib/main.dart)):
+O Provider é configurado no ponto de entrada da aplicação ([main.dart](lib/main.dart)) utilizando **MultiProvider** para gerenciar múltiplos estados:
 
 ```dart
 void main() {
-  runApp(ChangeNotifierProvider(
-      create: (context) => Clients(clients: []),
-      child: const MyApp(),
-    ),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => Clients(clients: [])
+      ),
+      ChangeNotifierProvider(
+        create: (context) => Types(types: [
+          ClientType(name: 'Platinum', icon: Icons.credit_card),
+          ClientType(name: 'Golden', icon: Icons.card_membership),
+          ClientType(name: 'Titanium', icon: Icons.credit_score),
+          ClientType(name: 'Diamond', icon: Icons.diamond),
+        ])
+      ),
+    ],
+    child: const MyApp(),
+  ));
 }
+```
+
+### Uso do Consumer
+
+As telas utilizam o widget **Consumer** para escutar mudanças e reagir automaticamente:
+
+```dart
+Consumer<Clients>(
+  builder: (context, list, widget) {
+    return ListView.builder(
+      itemCount: list.clients.length,
+      itemBuilder: (context, index) {
+        // Renderiza cada cliente
+      },
+    );
+  },
+)
 ```
 
 ### Benefícios do Provider
@@ -97,6 +132,7 @@ void main() {
 - ✅ **Separação de Responsabilidades**: Lógica de negócio separada da UI
 - ✅ **Performance**: Apenas widgets que dependem do estado são reconstruídos
 - ✅ **Facilidade de Manutenção**: Código mais organizado e testável
+- ✅ **Múltiplos Estados**: Gerenciamento independente de Clientes e Tipos
 
 ### Dependências
 
