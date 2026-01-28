@@ -24,7 +24,8 @@ O **Client Control** é uma aplicação mobile desenvolvida em Flutter que permi
 - ✅ **Cadastro de Clientes**: Adicione novos clientes com nome, email e tipo
 - ✅ **Cadastro de Tipos**: Crie categorias personalizadas de clientes com ícones
 - ✅ **Listagem Dinâmica**: Visualize todos os clientes e tipos cadastrados
-- ✅ **Exclusão por Deslize**: Remova registros com gesto de swipe (Dismissible)
+- ✅ **Exclusão por Deslize**: Remova registros com gesto de swipe (Dismissible) utilizando Provider
+- ✅ **Gerenciamento de Estado**: Remoção reativa de itens através dos métodos remove() com notifyListeners()
 - ✅ **Seletor de Ícones**: Escolha ícones personalizados para cada tipo de cliente
 - ✅ **Navegação Fluida**: Menu hamburguer para navegação entre telas
 - ✅ **Interface Moderna**: Design Material com cores personalizadas
@@ -62,6 +63,7 @@ lib/
 ```dart
 - clients: List<Client>  // Lista de clientes
 - add(Client): void      // Adiciona um cliente e notifica listeners
+- remove(int): void      // Remove um cliente pelo índice e notifica listeners
 - extends ChangeNotifier // Notifica listeners sobre mudanças
 ```
 
@@ -75,6 +77,7 @@ lib/
 ```dart
 - types: List<ClientType>  // Lista de tipos de clientes
 - add(ClientType): void    // Adiciona um tipo e notifica listeners
+- remove(int): void        // Remove um tipo pelo índice e notifica listeners
 - extends ChangeNotifier   // Notifica listeners sobre mudanças
 ```
 
@@ -327,7 +330,8 @@ dev_dependencies:
 
 ### Exclusão de Registros
 
-- Deslize o item para a esquerda ou direita
+- Deslize o item para a esquerda ou di através do Provider
+- A remoção chama o método `remove()` que utiliza `notifyListeners()` para atualizar a UIreita
 - O item será removido automaticamente
 - O fundo vermelho indica a ação de exclusão
 
@@ -380,14 +384,15 @@ O aplicativo utiliza um tema personalizado com:
 
 ---
 
-## 🐛 Problemas Conhecidos
-
-- A lista de tipos está duplicada entre `clients_page.dart` e `client_types_page.dart`
-- Não há persistência de dados (os dados são perdidos ao fechar o app)
+##Não há persistência de dados (os dados são perdidos ao fechar o app)
 - Não há validação de campos obrigatórios
 - Typo nos botões: "Calcelar" deveria ser "Cancelar"
 
 ### Melhorias Futuras
+
+- [x] Implementar Provider para estado global
+- [x] Adicionar método remove() com notifyListeners() nas classes Clients e Types
+- [x] Refatorar exclusão de itens para usar Provider ao invés de setState()
 
 - [ ] Implementar Provider para estado global
 - [ ] Adicionar persistência com SQLite ou Shared Preferences
